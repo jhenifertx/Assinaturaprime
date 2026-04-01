@@ -103,10 +103,23 @@ export default function App() {
     const isNomeValid = validateField('nome', formData.nome);
     const isEmailValid = validateField('email', formData.email);
     const isCargoValid = validateField('cargo', formData.cargo);
+    
+    let isPhonePairValid = true;
     const isDDDValid = validateField('celularDDD', formData.celularDDD);
     const isNumValid = validateField('celularNumero', formData.celularNumero);
 
-    if (isNomeValid && isEmailValid && isCargoValid && isDDDValid && isNumValid) {
+    if (formData.celularDDD.length > 0 || formData.celularNumero.length > 0) {
+      if (formData.celularDDD.replace(/\D/g, '').length < 2) {
+        setErrors(prev => ({ ...prev, celularDDD: 'DDD incompleto' }));
+        isPhonePairValid = false;
+      }
+      if (formData.celularNumero.replace(/\D/g, '').length < 8) {
+        setErrors(prev => ({ ...prev, celularNumero: 'Número incompleto' }));
+        isPhonePairValid = false;
+      }
+    }
+
+    if (isNomeValid && isEmailValid && isCargoValid && isDDDValid && isNumValid && isPhonePairValid) {
       setIsGenerating(true);
       
       setTimeout(() => {
@@ -437,7 +450,7 @@ export default function App() {
                     />
                   </div>
                 </div>
-                {(errors.celularDDD || errors.celularNumero) && <p className="mt-1 text-red-500 text-[11px] font-semibold" role="alert">DDD ou Número inválido</p>}
+                {(errors.celularDDD || errors.celularNumero) && <p className="mt-1 text-red-500 text-[11px] font-semibold" role="alert">{errors.celularDDD || errors.celularNumero}</p>}
 
                 <div>
                   <button
@@ -677,7 +690,7 @@ export default function App() {
           </p>
         </div>
       </footer>
-      <Chatbot />
+      <Chatbot onShowTutorial={() => setShowTutorialModal(true)} />
 
       {/* Tutorial Modal */}
       {showTutorialModal && (

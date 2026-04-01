@@ -1,8 +1,12 @@
 import { useState, useEffect } from 'react';
-import { X as XIcon, MessageSquare as MessageSquareIcon, Send as SendIcon, ThumbsUp as ThumbsUpIcon, Heart as HeartIcon, Mail as MailIcon, ChevronRight as ChevronRightIcon, ExternalLink as ExternalLinkIcon } from 'lucide-react';
+import { X as XIcon, MessageSquare as MessageSquareIcon, Send as SendIcon, ThumbsUp as ThumbsUpIcon, Heart as HeartIcon, Mail as MailIcon, ChevronRight as ChevronRightIcon, ExternalLink as ExternalLinkIcon, PlayCircle as PlayCircleIcon } from 'lucide-react';
 import orbiMascot from '../../assets/orbi_oficial.png';
 
-export default function Chatbot() {
+interface ChatbotProps {
+  onShowTutorial?: () => void;
+}
+
+export default function Chatbot({ onShowTutorial }: ChatbotProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [view, setView] = useState<'main' | 'support' | 'feedback'>('main');
   const [feedback, setFeedback] = useState('');
@@ -132,6 +136,24 @@ export default function Chatbot() {
                   </div>
                   <ExternalLinkIcon size={16} className="text-slate-300 group-hover:text-emerald-500 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
                 </a>
+
+                <button 
+                  onClick={() => {
+                    if (onShowTutorial) {
+                      onShowTutorial();
+                      setIsOpen(false);
+                    }
+                  }}
+                  className="w-full p-4 bg-slate-50 hover:bg-blue-50 border border-slate-100 hover:border-blue-200 rounded-2xl flex items-center justify-between transition-all group"
+                >
+                  <div className="flex items-center gap-3">
+                    <div className="p-2 bg-white rounded-xl shadow-sm text-[#002753] group-hover:text-blue-500 transition-colors">
+                      <PlayCircleIcon size={18} />
+                    </div>
+                    <span className="text-[#002753] font-bold text-sm text-left">Como configurar no Outlook</span>
+                  </div>
+                  <ChevronRightIcon size={16} className="text-slate-300 group-hover:text-blue-500 transition-transform group-hover:translate-x-1" />
+                </button>
               </div>
             )}
 
