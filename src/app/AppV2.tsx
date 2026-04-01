@@ -1,5 +1,5 @@
 import { useState, useCallback, useEffect } from 'react';
-import { LucideIcon, Check as CheckIcon, Copy as CopyIcon, ChevronDown as ChevronDownIcon, ChevronUp as ChevronUpIcon, Phone as PhoneIcon, Mail as MailIcon, Play as PlayIcon, Download as DownloadIcon, CheckCircle2 as CheckCircle2Icon, AlertCircle as AlertCircleIcon, Loader2 as Loader2Icon, RotateCcw as RotateCcwIcon, PlayCircle as PlayCircleIcon, X as XIcon } from 'lucide-react';
+import { LucideIcon, Check as CheckIcon, Copy as CopyIcon, ChevronDown as ChevronDownIcon, ChevronUp as ChevronUpIcon, Phone as PhoneIcon, Mail as MailIcon, Play as PlayIcon, Download as DownloadIcon, CheckCircle2 as CheckCircle2Icon, AlertCircle as AlertCircleIcon, Loader2 as Loader2Icon } from 'lucide-react';
 import imgPrimeControl from "figma:asset/a0d2e91fe30a3ed67d7934c34a6512e942d5c35b.png";
 import Chatbot from './components/Chatbot.tsx';
 
@@ -21,7 +21,7 @@ interface FormErrors {
   celularNumero?: string;
 }
 
-export default function App() {
+export default function AppV2() {
   const [formData, setFormData] = useState<FormData>({
     nome: '',
     email: '',
@@ -37,11 +37,9 @@ export default function App() {
   const [isGenerating, setIsGenerating] = useState(false);
   const [copied, setCopied] = useState(false);
   const [copiedHtml, setCopiedHtml] = useState(false);
-  const [submitError, setSubmitError] = useState(false);
   const [showHtmlCode, setShowHtmlCode] = useState(false);
   const [showMoreInfo, setShowMoreInfo] = useState(false);
   const [showVideo, setShowVideo] = useState(false);
-  const [showTutorialModal, setShowTutorialModal] = useState(false);
 
   const formatPhone = (value: string) => {
     const numbers = value.replace(/\D/g, '');
@@ -53,28 +51,14 @@ export default function App() {
   const validateField = useCallback((name: keyof FormData, value: string) => {
     let error = '';
     
-    if (name === 'nome' && value.trim().length < 3) {
-      error = value.trim().length === 0 ? 'Este campo é obrigatório' : 'Nome muito curto';
-    } else if (name === 'email') {
-      const emailValue = value.toLowerCase();
-      const genericDomains = ['gmail.com', 'yahoo.com', 'yahoo.com.br', 'hotmail.com', 'outlook.com', 'live.com', 'icloud.com', 'uol.com.br', 'bol.com.br', 'ig.com.br', 'terra.com.br'];
-      const domain = emailValue.split('@')[1];
-
-      if (value.trim().length === 0) {
-        error = 'Este campo é obrigatório';
-      } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) {
-        error = 'E-mail corporativo inválido';
-      } else if (domain && genericDomains.includes(domain)) {
-        error = 'Por favor, utilize seu e-mail corporativo';
-      }
-    } else if (name === 'cargo' && value.trim().length < 3) {
-      error = value.trim().length === 0 ? 'Este campo é obrigatório' : 'Cargo muito curto';
-    } else if (name === 'celularDDD') {
-      const len = value.replace(/\D/g, '').length;
-      if (len > 0 && len < 2) error = 'DDD incompleto';
-    } else if (name === 'celularNumero') {
-      const len = value.replace(/\D/g, '').length;
-      if (len > 0 && len < 8) error = 'Número incompleto';
+    if (!value && ['nome', 'email', 'cargo', 'celularDDD', 'celularNumero'].includes(name)) {
+      error = 'Este campo é obrigatório';
+    } else if (name === 'email' && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) {
+      error = 'E-mail inválido';
+    } else if (name === 'celularDDD' && value.length < 2) {
+      error = 'DDD inválido';
+    } else if (name === 'celularNumero' && value.replace(/\D/g, '').length < 8) {
+      error = 'Número incompleto';
     }
     
     setErrors(prev => ({ ...prev, [name]: error }));
@@ -109,30 +93,18 @@ export default function App() {
     if (isNomeValid && isEmailValid && isCargoValid && isDDDValid && isNumValid) {
       setIsGenerating(true);
       
+      // Simulated "Tactile" feedback for the user
       setTimeout(() => {
         setIsGenerating(false);
-        try {
-          const audio = new Audio('https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3');
-          audio.volume = 0.5;
-          audio.play().catch(e => console.log('Audio error:', e));
-        } catch (err) {
-          // ignore
-        }
-
         setCurrentStep(2);
         setCopied(false);
-        setShowVideo(false);
-        setSubmitError(false);
+        window.scrollTo({ top: 0, behavior: 'smooth' });
       }, 750);
-    } else {
-      setSubmitError(true);
-      setTimeout(() => setSubmitError(false), 5000);
     }
   };
 
-  const isEmailFormatInvalid = formData.email.trim().length > 0 && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email);
-
   const generateSignatureHtml = () => {
+    // URL base usa o domínio em que o site estiver hospedado para as imagens carregarem em emails.
     const baseUrl = window.location.origin;
     const celularFormatado = (formData.celularDDD && formData.celularNumero) ? `(${formData.celularDDD}) ${formData.celularNumero}` : '';
     const telefoneFormatado = (formData.telefoneDDD && formData.telefoneNumero) ? `(${formData.telefoneDDD}) ${formData.telefoneNumero}` : '';
@@ -191,7 +163,10 @@ export default function App() {
           </tr>` : ''}
 
           <tr>
-            <td colspan="2" valign="middle" style="padding-top:2px; padding-bottom:5px;">
+            <td valign="middle" style="padding-bottom:5px;">
+              <img src="${baseUrl}/icon-web.png" width="12" style="display:block; border:0;" alt="Site">
+            </td>
+            <td valign="middle" style="padding-left:6px; padding-bottom:5px;">
               <a href="https://www.primecontrol.com.br" target="_blank" style="text-decoration:none; color:#002753; font-size:12px;">
                 www.primecontrol.com.br
               </a>
@@ -222,6 +197,7 @@ export default function App() {
       setTimeout(() => setCopied(false), 3000);
     } catch (err) {
       console.error('Failed to copy rich text: ', err);
+      // Fallback if rich text fails
       const signatureText = `${formData.nome}\n${formData.cargo}\n${formData.email}`;
       navigator.clipboard.writeText(signatureText);
       setCopied(true);
@@ -236,98 +212,146 @@ export default function App() {
     setTimeout(() => setCopiedHtml(false), 3000);
   };
 
+  const isFormValid = formData.nome && formData.email && formData.cargo;
+
   return (
     <div className="min-h-screen bg-[#F8FAFC] font-['Poppins',sans-serif] selection:bg-[#f47920] selection:text-white">
-      <header className="bg-[#002753] text-white shadow-md relative z-10">
-        <div className="max-w-[1200px] mx-auto px-4 sm:px-8 py-5 sm:py-6 flex items-center justify-between">
-          <div className="flex items-center gap-4 sm:gap-5">
-            <div className="bg-white/10 p-2 sm:p-2.5 rounded-2xl backdrop-blur-sm shadow-inner transition-transform hover:scale-105 duration-300">
-              <img src={imgPrimeControl} alt="Prime Control" className="h-8 sm:h-9 w-auto" />
+      {/* Header */}
+      <header className="bg-[#002753] text-white shadow-md">
+        <div className="max-w-[1400px] mx-auto px-4 sm:px-8 lg:px-16 py-3 sm:py-4 flex items-center justify-between">
+          <div className="flex items-center gap-3 sm:gap-4">
+            <div className="bg-white/10 p-1.5 sm:p-2 rounded-xl backdrop-blur-sm shadow-inner transition-transform hover:scale-105 duration-300">
+              <img src={imgPrimeControl} alt="Prime Control" className="h-6 sm:h-8 w-auto" />
             </div>
-            <div className="h-10 w-px bg-white/20 hidden sm:block mx-1" />
+            <div className="h-8 w-px bg-white/20 hidden sm:block mx-1" />
             <div className="font-['Titillium_Web',sans-serif] flex flex-col justify-center">
-              <h1 className="text-xl sm:text-[1.65rem] font-bold tracking-tight leading-none mb-1.5 pt-0.5">
-                Gerador de Assinaturas de E-mail
+              <h1 className="text-lg sm:text-xl font-bold tracking-tight leading-none mb-1">
+                Gerador de Assinaturas <span className="text-[#f47920] ml-2 text-xs uppercase tracking-widest hidden sm:inline">V2 Teste</span>
               </h1>
-              <p className="text-blue-100/70 text-[10px] sm:text-[12px] font-semibold tracking-[0.2em] uppercase leading-none">
+              <p className="text-blue-100/70 text-[10px] sm:text-[11px] font-semibold tracking-wider uppercase leading-none">
                 Prime Control
               </p>
             </div>
           </div>
+          
+          <a href="#" target="_blank" rel="noopener noreferrer" className="hidden sm:flex items-center gap-2 bg-white/10 hover:bg-white/20 px-4 py-2 rounded-xl transition-colors font-semibold text-sm">
+            <DownloadIcon size={16} />
+            <span>Manual de Apoio</span>
+          </a>
         </div>
       </header>
 
+      {/* Progress Indicator */}
       <div className="bg-white border-b border-slate-200 py-3 shadow-sm sticky top-0 z-30">
-        <div className="max-w-[1200px] mx-auto px-4 sm:px-8">
+        <div className="max-w-[1000px] mx-auto px-4 sm:px-8">
           <div className="flex items-center justify-between font-['Titillium_Web',sans-serif]">
-            <button 
-              type="button" 
-              onClick={() => setCurrentStep(1)}
-              className={`flex items-center gap-2 group transition-opacity ${currentStep > 1 ? 'hover:opacity-80 cursor-pointer' : 'cursor-default'}`}
-            >
+            {/* Step 1 */}
+            <div className="flex items-center gap-2 group">
               <div className={`flex items-center justify-center w-7 h-7 sm:w-8 sm:h-8 rounded-full font-bold text-xs sm:text-sm transition-all duration-500 ${
                 currentStep >= 1 ? 'bg-[#f47920] text-white shadow-sm' : 'bg-slate-200 text-slate-500'
               }`}>
                 {currentStep > 1 ? <CheckIcon size={16} strokeWidth={3} className="animate-in zoom-in-50 duration-300" /> : '1'}
               </div>
               <span className={`font-semibold text-xs sm:text-[15px] hidden sm:inline transition-colors ${currentStep >= 1 ? 'text-[#002753]' : 'text-slate-500'}`}>Preencher dados</span>
-            </button>
+            </div>
 
             <div className="flex-1 h-[2px] bg-slate-200 mx-4 sm:mx-8 rounded-full overflow-hidden">
               <div className={`h-full transition-all duration-700 ease-in-out ${currentStep >= 2 ? 'bg-[#f47920] w-full' : 'bg-transparent w-0'}`} />
             </div>
 
-            <button 
-              type="button"
-              onClick={() => { if (currentStep >= 2) setCurrentStep(2); }}
-              disabled={currentStep < 2}
-              className={`flex items-center gap-2 group transition-opacity ${currentStep > 2 ? 'hover:opacity-80 cursor-pointer' : 'cursor-default'}`}
-            >
+            {/* Step 2 */}
+            <div className="flex items-center gap-2 group">
               <div className={`flex items-center justify-center w-7 h-7 sm:w-8 sm:h-8 rounded-full font-bold text-xs sm:text-sm transition-all duration-500 ${
                 currentStep >= 2 ? 'bg-[#f47920] text-white shadow-sm' : 'bg-[#e2e8f0] text-slate-500'
               }`}>
                 {currentStep > 2 ? <CheckIcon size={16} strokeWidth={3} className="animate-in zoom-in-50 duration-300" /> : '2'}
               </div>
               <span className={`font-semibold text-xs sm:text-[15px] hidden sm:inline transition-colors ${currentStep >= 2 ? 'text-[#002753]' : 'text-slate-500'}`}>Gerar assinatura</span>
-            </button>
+            </div>
 
             <div className="flex-1 h-[2px] bg-slate-200 mx-4 sm:mx-8 rounded-full overflow-hidden">
               <div className={`h-full transition-all duration-700 ease-in-out ${currentStep >= 3 ? 'bg-[#f47920] w-full' : 'bg-transparent w-0'}`} />
             </div>
 
-            <button 
-              type="button"
-              onClick={() => { if (currentStep >= 3) setCurrentStep(3); }}
-              disabled={currentStep < 3}
-              className="flex items-center gap-2 group cursor-default"
-            >
+            {/* Step 3 */}
+            <div className="flex items-center gap-2 group">
               <div className={`flex items-center justify-center w-7 h-7 sm:w-8 sm:h-8 rounded-full font-bold text-xs sm:text-sm transition-all duration-500 ${
                 currentStep >= 3 ? 'bg-[#f47920] text-white shadow-sm' : 'bg-[#e2e8f0] text-slate-500'
               }`}>
                 {currentStep >= 3 ? <CheckIcon size={16} strokeWidth={3} className="animate-in zoom-in-50 duration-300" /> : '3'}
               </div>
               <span className={`font-semibold text-xs sm:text-[15px] hidden sm:inline transition-colors ${currentStep >= 3 ? 'text-[#002753]' : 'text-slate-500'}`}>Copiar e aplicar</span>
-            </button>
+            </div>
           </div>
         </div>
       </div>
 
-      <main className="max-w-[1200px] mx-auto px-4 sm:px-8 py-6 lg:py-8">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 relative pb-10">
-          <div className="lg:col-span-5 order-2 lg:order-1 h-full">
-            <div className="bg-white rounded-2xl shadow-xl border border-slate-100 border-l-[6px] border-l-orange-500 p-6 lg:p-8 lg:sticky lg:top-6 z-20 transition-all duration-500">
+      {/* Main Content */}
+      <main className="max-w-[1400px] mx-auto px-4 sm:px-8 lg:px-16 py-6 lg:py-8 space-y-8">
+        
+        {/* V2 Header Section: Tutorial */}
+        {currentStep === 1 && (
+          <div className="max-w-4xl mx-auto animate-in fade-in slide-in-from-bottom-4 duration-700">
+            {/* Video Card */}
+            <div className="bg-white rounded-[1.5rem] shadow-xl overflow-hidden border border-slate-100 transition-shadow hover:shadow-2xl duration-500 font-['Poppins',sans-serif]">
+              <div className="p-6 flex items-center justify-between font-['Titillium_Web',sans-serif]">
+                <div>
+                  <h3 className="text-xl font-bold text-[#002753] uppercase tracking-tight">Tutorial Rápido</h3>
+                  <p className="text-slate-400 text-sm font-medium">Aprenda a aplicar sua nova assinatura</p>
+                </div>
+              </div>
+              <div className="px-8 pb-8">
+                {!showVideo ? (
+                  <div 
+                    onClick={() => setShowVideo(true)}
+                    className="relative rounded-2xl overflow-hidden aspect-video cursor-pointer hover:shadow-2xl transition-all duration-700 group ring-4 ring-slate-50"
+                  >
+                    <img 
+                      src="https://img.youtube.com/vi/XCpDXNuEbos/maxresdefault.jpg" 
+                      alt="Tutorial" 
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-1000"
+                    />
+                    <div className="absolute inset-0 bg-[#002753]/40 flex items-center justify-center group-hover:bg-[#002753]/20 transition-colors">
+                      <div className="bg-white w-16 h-16 rounded-full flex items-center justify-center shadow-2xl transform transition-all duration-500 group-hover:scale-110 group-hover:rotate-[360deg]">
+                        <PlayIcon size={28} className="text-[#f47920] ml-1" fill="currentColor" />
+                      </div>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="rounded-2xl overflow-hidden aspect-video shadow-2xl animate-in zoom-in-95 duration-500">
+                    <iframe 
+                      width="100%" 
+                      height="100%" 
+                      src="https://www.youtube.com/embed/XCpDXNuEbos?autoplay=1" 
+                      title="Tutorial Prime Control" 
+                      frameBorder="0" 
+                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+                      allowFullScreen
+                    />
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+        )}
+
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8">
+          {/* Form Column */}
+          <div className="order-2 lg:order-1">
+            <div className="bg-white rounded-[1.5rem] shadow-xl border-l-[6px] border-orange-500 p-6 sm:p-8 lg:sticky lg:top-24 transition-shadow hover:shadow-2xl hover:shadow-orange-500/5 duration-500 h-full">
               <div className="mb-6 font-['Titillium_Web',sans-serif]">
-                <h2 className="text-xl sm:text-2xl text-[#002753] font-bold mb-2 tracking-tight leading-tight">
-                  Preencha seus dados para criar sua assinatura
+                <h2 className="text-xl sm:text-2xl text-[#002753] font-bold mb-1 tracking-tight">
+                  Gere sua assinatura
                 </h2>
                 <p className="text-slate-500 text-sm font-medium">
-                  Informe as informações essenciais
+                  Preencha os campos abaixo para gerar sua identidade digital.
                 </p>
               </div>
 
               <form onSubmit={handleSubmit} className="space-y-5">
+                {/* Nome e sobrenome */}
                 <div>
-                  <label htmlFor="nome" className="block text-[#002753] font-normal mb-1.5 text-[13px] tracking-wide">
+                  <label htmlFor="nome" className="block text-[#002753] font-bold mb-1.5 text-[13px] tracking-wide">
                     Nome completo <span className="text-orange-500" aria-hidden="true">*</span>
                   </label>
                   <div className="relative group">
@@ -336,10 +360,11 @@ export default function App() {
                       type="text"
                       value={formData.nome}
                       onChange={handleChange}
+                      onBlur={() => validateField('nome', formData.nome)}
                       required
                       aria-required="true"
                       aria-invalid={errors.nome ? 'true' : 'false'}
-                      className={`w-full px-4 py-2.5 bg-white border rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500/20 transition-all font-sans text-[14px] text-slate-800 placeholder:text-slate-400 placeholder:font-normal font-normal ${
+                      className={`w-full px-4 py-2.5 bg-white border rounded-xl focus:outline-none focus:ring-4 focus:ring-orange-500/10 transition-all font-sans text-[14px] text-slate-800 placeholder:text-slate-400 placeholder:font-normal font-medium ${
                         errors.nome ? 'border-red-200 focus:border-red-400 shadow-sm shadow-red-100' : 'border-slate-200 focus:border-orange-400'
                       }`}
                       placeholder="Ex: Maria Silva Santos"
@@ -353,8 +378,9 @@ export default function App() {
                   {errors.nome && <p className="mt-1 text-red-500 text-[11px] font-semibold" role="alert">{errors.nome}</p>}
                 </div>
 
+                {/* E-mail */}
                 <div>
-                  <label htmlFor="email" className="block text-[#002753] font-normal mb-1.5 text-[13px] tracking-wide">
+                  <label htmlFor="email" className="block text-[#002753] font-bold mb-1.5 text-[13px] tracking-wide">
                     E-mail corporativo <span className="text-orange-500" aria-hidden="true">*</span>
                   </label>
                   <div className="relative group">
@@ -363,11 +389,11 @@ export default function App() {
                       type="email"
                       value={formData.email}
                       onChange={handleChange}
-                      onBlur={() => { if(formData.email.trim().length > 0) validateField('email', formData.email) }}
+                      onBlur={() => validateField('email', formData.email)}
                       required
                       aria-required="true"
                       aria-invalid={errors.email ? 'true' : 'false'}
-                      className={`w-full px-4 py-2.5 bg-white border rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500/20 transition-all font-sans text-[14px] text-slate-800 placeholder:text-slate-400 placeholder:font-normal font-normal ${
+                      className={`w-full px-4 py-2.5 bg-white border rounded-xl focus:outline-none focus:ring-4 focus:ring-orange-500/10 transition-all font-sans text-[14px] text-slate-800 placeholder:text-slate-400 placeholder:font-normal font-medium ${
                         errors.email ? 'border-red-200 focus:border-red-400 shadow-sm shadow-red-100' : 'border-slate-200 focus:border-orange-400'
                       }`}
                       placeholder="nome.sobrenome@primecontrol.com.br"
@@ -381,8 +407,9 @@ export default function App() {
                   {errors.email && <p className="mt-1 text-red-500 text-[11px] font-semibold" role="alert">{errors.email}</p>}
                 </div>
 
+                {/* Cargo */}
                 <div>
-                  <label htmlFor="cargo" className="block text-[#002753] font-normal mb-1.5 text-[13px] tracking-wide">
+                  <label htmlFor="cargo" className="block text-[#002753] font-bold mb-1.5 text-[13px] tracking-wide">
                     Cargo / Área <span className="text-orange-500" aria-hidden="true">*</span>
                   </label>
                   <div className="relative group">
@@ -391,10 +418,11 @@ export default function App() {
                       type="text"
                       value={formData.cargo}
                       onChange={handleChange}
+                      onBlur={() => validateField('cargo', formData.cargo)}
                       required
                       aria-required="true"
                       aria-invalid={errors.cargo ? 'true' : 'false'}
-                      className={`w-full px-4 py-2.5 bg-white border rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500/20 transition-all font-sans text-[14px] text-slate-800 placeholder:text-slate-400 placeholder:font-normal font-normal ${
+                      className={`w-full px-4 py-2.5 bg-white border rounded-xl focus:outline-none focus:ring-4 focus:ring-orange-500/10 transition-all font-sans text-[14px] text-slate-800 placeholder:text-slate-400 placeholder:font-normal font-medium ${
                         errors.cargo ? 'border-red-200 focus:border-red-400 shadow-sm shadow-red-100' : 'border-slate-200 focus:border-orange-400'
                       }`}
                       placeholder="Ex: Analista de Marketing"
@@ -408,15 +436,17 @@ export default function App() {
                   {errors.cargo && <p className="mt-1 text-red-500 text-[11px] font-semibold" role="alert">{errors.cargo}</p>}
                 </div>
 
+                {/* Celular */}
                 <div className="grid grid-cols-12 gap-4">
                   <div className="col-span-3">
-                    <label className="block text-[#002753] font-normal mb-1.5 text-[13px] tracking-wide">DDD</label>
+                    <label className="block text-[#002753] font-bold mb-1.5 text-[13px] tracking-wide">DDD</label>
                     <input
                       id="celularDDD"
                       type="text"
                       value={formData.celularDDD}
                       onChange={handleChange}
-                      className={`w-full px-3 py-2.5 bg-white border rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500/20 transition-all font-sans text-[14px] text-slate-800 placeholder:text-slate-400 placeholder:font-normal font-normal text-center ${
+                      onBlur={() => validateField('celularDDD', formData.celularDDD)}
+                      className={`w-full px-2 py-2.5 bg-white border rounded-xl focus:outline-none focus:ring-4 focus:ring-orange-500/10 transition-all font-sans text-[14px] text-slate-800 placeholder:text-slate-400 placeholder:font-normal font-bold text-center ${
                         errors.celularDDD ? 'border-red-200 focus:border-red-400' : 'border-slate-200 focus:border-orange-400'
                       }`}
                       placeholder="00"
@@ -424,21 +454,23 @@ export default function App() {
                     />
                   </div>
                   <div className="col-span-9">
-                    <label className="block text-[#002753] font-normal mb-1.5 text-[13px] tracking-wide">Celular</label>
+                    <label className="block text-[#002753] font-bold mb-1.5 text-[13px] tracking-wide">Celular</label>
                     <input
                       id="celularNumero"
                       type="text"
                       value={formData.celularNumero}
                       onChange={handleChange}
-                      className={`w-full px-4 py-2.5 bg-white border rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500/20 transition-all font-sans text-[14px] text-slate-800 placeholder:text-slate-400 placeholder:font-normal font-normal ${
+                      onBlur={() => validateField('celularNumero', formData.celularNumero)}
+                      className={`w-full px-4 py-2.5 bg-white border rounded-xl focus:outline-none focus:ring-4 focus:ring-orange-500/10 transition-all font-sans text-[14px] text-slate-800 placeholder:text-slate-400 placeholder:font-normal font-medium ${
                         errors.celularNumero ? 'border-red-200 focus:border-red-400' : 'border-slate-200 focus:border-orange-400'
                       }`}
                       placeholder="00000-0000"
                     />
                   </div>
                 </div>
-                {(errors.celularDDD || errors.celularNumero) && <p className="mt-1 text-red-500 text-[11px] font-semibold" role="alert">DDD ou Número inválido</p>}
+                {(errors.celularDDD || errors.celularNumero) && <p className="mt-1 text-red-500 text-[11px] font-semibold" role="alert">Telefone obrigatório ou inválido</p>}
 
+                {/* More Info */}
                 <div>
                   <button
                     type="button"
@@ -455,25 +487,25 @@ export default function App() {
                     <div className="mt-3 p-4 bg-slate-50/50 rounded-2xl space-y-4 border border-slate-100 animate-in slide-in-from-top-2 fade-in duration-300">
                       <div className="grid grid-cols-12 gap-3">
                         <div className="col-span-3">
-                          <label className="block text-[#002753] font-normal mb-1.5 text-[11px] uppercase tracking-wider">DDD</label>
+                          <label className="block text-[#002753] font-bold mb-1.5 text-[11px] uppercase tracking-wider">DDD</label>
                           <input
                             id="telefoneDDD"
                             type="text"
                             value={formData.telefoneDDD}
                             onChange={handleChange}
-                            className="w-full px-3 py-2.5 bg-white border border-slate-200 rounded-lg focus:outline-none focus:border-orange-400 focus:ring-2 focus:ring-orange-500/20 transition-all font-sans text-slate-800 placeholder:text-slate-400 placeholder:font-normal font-normal text-center text-[14px]"
+                            className="w-full px-2 py-2.5 bg-white border border-slate-200 rounded-lg focus:outline-none focus:border-orange-400 focus:ring-4 focus:ring-orange-500/10 transition-all font-sans text-slate-800 placeholder:text-slate-400 placeholder:font-normal font-bold text-center text-[14px]"
                             placeholder="00"
                             maxLength={2}
                           />
                         </div>
                         <div className="col-span-9">
-                          <label className="block text-[#002753] font-normal mb-1.5 text-[11px] uppercase tracking-wider">Telefone Fixo</label>
+                          <label className="block text-[#002753] font-bold mb-1.5 text-[11px] uppercase tracking-wider">Telefone Fixo</label>
                           <input
                             id="telefoneNumero"
                             type="text"
                             value={formData.telefoneNumero}
                             onChange={handleChange}
-                            className="w-full px-4 py-2.5 bg-white border border-slate-200 rounded-lg focus:outline-none focus:border-orange-400 focus:ring-2 focus:ring-orange-500/20 transition-all font-sans text-slate-800 placeholder:text-slate-400 placeholder:font-normal font-normal text-[14px]"
+                            className="w-full px-4 py-2.5 bg-white border border-slate-200 rounded-lg focus:outline-none focus:border-orange-400 focus:ring-4 focus:ring-orange-500/10 transition-all font-sans text-slate-800 placeholder:text-slate-400 placeholder:font-normal font-medium text-[14px]"
                             placeholder="0000-0000"
                           />
                         </div>
@@ -482,163 +514,97 @@ export default function App() {
                   )}
                 </div>
 
+                {/* Submit Button */}
                 <div className="pt-2">
                   <button
                     type="submit"
-                    disabled={isGenerating || isEmailFormatInvalid}
-                    className={`w-full py-4 rounded-xl font-bold uppercase tracking-widest text-[13px] transition-all shadow-lg flex items-center justify-center gap-3 active:scale-95 ${
-                      !isGenerating && !isEmailFormatInvalid
+                    disabled={!isFormValid || isGenerating}
+                    className={`w-full py-4 rounded-[1rem] font-bold uppercase tracking-widest text-sm transition-all shadow-lg font-['Titillium_Web',sans-serif] flex items-center justify-center gap-3 active:scale-95 mt-auto ${
+                      isFormValid && !isGenerating
                         ? 'bg-[#f47920] text-white hover:bg-orange-600 hover:shadow-orange-500/30 transform hover:-translate-y-0.5'
-                        : 'bg-slate-200 text-slate-400 cursor-not-allowed grayscale bg-opacity-70'
+                        : 'bg-slate-200 text-slate-400 cursor-not-allowed grayscale'
                     }`}
                   >
                     {isGenerating ? (
                       <>
-                        <Loader2Icon size={18} className="animate-spin" />
+                        <Loader2Icon size={20} className="animate-spin" />
                         <span>Gerando...</span>
                       </>
                     ) : (
                       <span>Criar assinatura digital</span>
                     )}
                   </button>
-
-                  {submitError && (
-                    <div className="flex items-center justify-center gap-2 text-red-500 font-semibold text-xs mt-4 animate-in fade-in slide-in-from-top-1">
-                      <AlertCircleIcon size={14} />
-                      <span>Revise os campos obrigatórios acima.</span>
-                    </div>
-                  )}
                 </div>
               </form>
             </div>
           </div>
 
-          <div className="lg:col-span-7 order-1 lg:order-2 space-y-6">
-            {currentStep === 1 && (
-              <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-700">
-                <div className="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden font-['Poppins',sans-serif]">
-                  <div className="p-6 pb-4">
-                    <h3 className="text-[#002753] font-bold text-lg font-['Titillium_Web',sans-serif] tracking-tight">Veja como usar</h3>
-                  </div>
-                  
-                  <div className="px-6 pb-6">
-                    {!showVideo ? (
-                      <div 
-                        onClick={() => setShowVideo(true)}
-                        className="relative rounded-2xl overflow-hidden aspect-video cursor-pointer hover:shadow-2xl transition-all duration-700 group ring-4 ring-slate-50"
-                      >
-                        <img 
-                          src="https://img.youtube.com/vi/XCpDXNuEbos/maxresdefault.jpg" 
-                          alt="Tutorial" 
-                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-1000"
-                        />
-                        <div className="absolute inset-0 bg-[#002753]/40 flex items-center justify-center group-hover:bg-[#002753]/20 transition-colors">
-                          <div className="bg-white w-16 h-16 rounded-full flex items-center justify-center shadow-2xl transform transition-all duration-500 group-hover:scale-110 group-hover:rotate-[360deg]">
-                            <PlayIcon size={28} className="text-[#f47920] ml-1" fill="currentColor" />
-                          </div>
-                        </div>
-                      </div>
-                    ) : (
-                      <div className="rounded-2xl overflow-hidden aspect-video shadow-2xl animate-in zoom-in-95 duration-500">
-                        <iframe 
-                          width="100%" 
-                          height="100%" 
-                          src="https://www.youtube.com/embed/XCpDXNuEbos?autoplay=1" 
-                          title="Tutorial Prime Control" 
-                          frameBorder="0" 
-                          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
-                          allowFullScreen
-                        />
-                      </div>
-                    )}
-                  </div>
+          {/* Preview Column */}
+          <div className="order-1 lg:order-2 h-full">
+            {currentStep === 1 ? (
+              <div className="bg-white rounded-[2rem] border-2 border-dashed border-slate-200 p-8 flex flex-col items-center justify-center text-center transition-colors shadow-sm group duration-500 h-full min-h-[500px]">
+                <div className="bg-slate-50 p-4 rounded-2xl mb-6 shadow-inner text-slate-300 group-hover:bg-orange-50 transition-colors duration-500">
+                  <MailIcon size={40} className="group-hover:text-orange-400 transition-colors duration-500 animate-pulse" />
                 </div>
-
-                <div className="bg-white rounded-2xl shadow-sm border border-slate-100 p-6 font-['Poppins',sans-serif]">
-                  <h3 className="text-[#002753] font-bold text-[15px] font-['Titillium_Web',sans-serif] mb-4 tracking-tight">Precisa de ajuda?</h3>
-                  <a 
-                    href="#" 
-                    target="_blank" 
-                    rel="noopener noreferrer" 
-                    className="w-full py-2.5 px-6 border border-[#002753] text-[#002753] rounded-xl font-bold hover:bg-[#002753] hover:text-white transition-all duration-300 flex items-center justify-center gap-3 active:scale-95 text-[13px] group shadow-sm hover:shadow-md"
-                  >
-                    <DownloadIcon size={16} className="group-hover:-translate-y-0.5 transition-transform duration-300" />
-                    <span>Baixar manual (PPTX)</span>
-                  </a>
-                </div>
-
-                <div className="bg-white rounded-2xl border border-dashed border-slate-300 p-10 flex flex-col items-center justify-center text-center transition-colors min-h-[300px]">
-                  <div className="bg-slate-100 p-5 rounded-full mb-4 text-slate-400">
-                    <MailIcon size={28} />
-                  </div>
-                  <h3 className="text-lg font-bold text-[#002753] font-['Titillium_Web',sans-serif] mb-2 tracking-tight">Sua assinatura aparecerá aqui</h3>
-                  <p className="text-slate-500 text-[13px] font-medium max-w-[280px] leading-relaxed font-['Poppins',sans-serif]">
-                    Preencha o formulário ao lado e clique em "Criar minha assinatura" para visualizar o resultado
-                  </p>
-                </div>
-              </div>
-            )}
-
-            {currentStep >= 2 && (
-              <div className="space-y-6 animate-in slide-in-from-right fade-in duration-500 font-['Poppins',sans-serif]">
-                <div className="bg-white rounded-[1.5rem] shadow-xl p-8 border border-slate-100 relative">
-                  <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-8 gap-4">
-                    <h2 className="text-xl sm:text-2xl font-bold text-[#002753] font-['Titillium_Web',sans-serif] uppercase tracking-tighter">
-                      Resultado Final
-                    </h2>
-                    <div className="flex items-center justify-center gap-2 text-emerald-600 bg-emerald-50/80 px-4 py-2 rounded-full font-semibold text-sm animate-in fade-in zoom-in-50 duration-700 border border-emerald-200/50 shadow-sm">
-                      <CheckCircle2Icon size={18} />
-                      <span>Gerada com sucesso!</span>
+                <h3 className="text-2xl font-bold text-slate-700 font-['Titillium_Web',sans-serif] uppercase tracking-tighter mb-4">Preview em Tempo Real</h3>
+                <p className="text-slate-400 text-sm font-medium max-w-[280px] leading-relaxed font-['Poppins',sans-serif]">
+                  Preencha o formulário ao lado para visualizar como sua assinatura ficará, antes de concluí-la.
+                </p>
+                
+                <div className="w-full max-w-sm mt-12 space-y-4 opacity-40 mix-blend-multiply">
+                  <div className="flex gap-4 items-center">
+                    <div className="w-16 h-16 rounded bg-slate-200 animate-pulse" />
+                    <div className="space-y-2 flex-1">
+                      <div className="h-4 bg-slate-200 rounded w-3/4 animate-pulse" />
+                      <div className="h-3 bg-slate-200 rounded w-1/2 animate-pulse" />
                     </div>
                   </div>
+                  <div className="space-y-2 pt-2">
+                    <div className="h-2 bg-slate-200 rounded w-full animate-pulse" />
+                    <div className="h-2 bg-slate-200 rounded w-4/5 animate-pulse" />
+                    <div className="h-2 bg-slate-200 rounded w-5/6 animate-pulse" />
+                  </div>
+                </div>
+              </div>
+            ) : (
+              <div className="space-y-8 animate-in slide-in-from-right fade-in duration-500 font-['Poppins',sans-serif] h-full flex flex-col justify-start">
+                {/* Success Banner */}
+                <div className="bg-[#10B981] rounded-[2rem] p-6 shadow-xl flex items-center gap-6 text-white relative overflow-hidden transition-transform hover:scale-[1.01] duration-300">
+                  <div className="animate-bounce">
+                    <CheckCircle2Icon size={32} />
+                  </div>
+                  <div>
+                    <h3 className="text-xl font-bold font-['Titillium_Web',sans-serif] uppercase leading-tight">Excelente!</h3>
+                    <p className="text-emerald-50 text-sm font-medium">Sua assinatura foi gerada com total sucesso.</p>
+                  </div>
+                </div>
 
-                  <div className="bg-slate-50/80 rounded-[1.5rem] p-4 sm:p-5 mb-8 border border-slate-100 flex items-center justify-center shadow-inner transition-colors group-hover:bg-slate-100 duration-500">
-                    <div className="bg-white p-4 sm:p-6 rounded-2xl shadow-sm border border-slate-200/60 w-full overflow-x-auto transform transition-transform group-hover:scale-[1.01] duration-500">
+                {/* Final Preview */}
+                <div className="bg-white rounded-[2rem] shadow-2xl p-8 border border-slate-100 relative group flex-1 flex flex-col">
+                  <h2 className="text-2xl font-bold text-[#002753] font-['Titillium_Web',sans-serif] mb-6 uppercase tracking-tighter">
+                    Resultado Final
+                  </h2>
+
+                  <div className="bg-slate-50 rounded-3xl p-6 mb-8 border border-slate-100 flex items-center justify-center shadow-inner transition-colors group-hover:bg-slate-100 duration-500 flex-1 relative overflow-hidden">
+                    <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-50 w-full overflow-x-auto transform transition-transform group-hover:scale-[1.02] duration-500">
                       <div 
                         dangerouslySetInnerHTML={{ __html: generateSignatureHtml() }}
                       />
                     </div>
                   </div>
 
+                  {/* Actions */}
                   <div className="space-y-4">
                     <button
                       onClick={handleCopy}
                       aria-label={copied ? "Assinatura copiada" : "Copiar assinatura digital"}
-                      className={`w-full py-4 rounded-xl font-bold uppercase tracking-widest text-[13px] transition-all shadow-lg flex items-center justify-center gap-3 active:scale-95 ${
+                      className={`w-full py-5 rounded-2xl font-bold uppercase tracking-widest transition-all shadow-xl flex items-center justify-center gap-4 active:scale-95 ${
                         copied ? 'bg-emerald-500 text-white transform scale-[1.02]' : 'bg-[#002753] text-white hover:bg-[#00346f] hover:-translate-y-0.5'
                       }`}
                     >
                       {copied ? <CheckIcon size={24} strokeWidth={3} className="animate-in zoom-in-50" /> : <CopyIcon size={20} />}
                       <span>{copied ? 'Copiado para Clipboard' : 'Copiar Assinatura'}</span>
                     </button>
-
-                    <div className="flex flex-col sm:flex-row items-center gap-4 border-t border-slate-100 pt-6 justify-center">
-                      <button 
-                        onClick={() => {
-                          setFormData({
-                            nome: '', email: '', cargo: '',
-                            celularDDD: '', celularNumero: '',
-                            telefoneDDD: '', telefoneNumero: ''
-                          });
-                          setErrors({});
-                          setCurrentStep(1);
-                        }}
-                        className="flex items-center gap-2 font-bold text-[#002753] text-[11px] sm:text-[12px] uppercase tracking-wider hover:opacity-80 hover:bg-blue-50 px-4 py-2 rounded-lg transition-all"
-                      >
-                        <RotateCcwIcon size={14} strokeWidth={2.5} />
-                        Criar uma nova assinatura
-                      </button>
-
-                      <div className="hidden sm:block w-px h-6 bg-slate-200" />
-
-                      <button 
-                        onClick={() => setShowTutorialModal(true)}
-                        className="flex items-center gap-2 font-bold text-[#002753] text-[11px] sm:text-[12px] uppercase tracking-wider hover:opacity-80 hover:bg-blue-50 px-4 py-2 rounded-lg transition-all"
-                      >
-                        <PlayCircleIcon size={16} strokeWidth={2.5} />
-                        Como configurar
-                      </button>
-                    </div>
 
                     <div className="pt-6 border-t border-slate-100 flex flex-col items-center">
                       <button
@@ -677,65 +643,35 @@ export default function App() {
                     </div>
                   </div>
                 </div>
+
+                <div className="pt-2">
+                  <button
+                    onClick={() => {
+                      setCurrentStep(1);
+                      setFormData({
+                        nome: '', email: '', cargo: '',
+                        celularDDD: '', celularNumero: '',
+                        telefoneDDD: '', telefoneNumero: ''
+                      });
+                      setErrors({});
+                    }}
+                    className="w-full bg-white text-[#002753] shadow border-2 border-slate-100 rounded-2xl hover:text-orange-500 hover:border-orange-500 flex items-center justify-center gap-2 transition-all font-bold text-xs uppercase tracking-widest py-4 hover:tracking-[0.2em] transform duration-300"
+                  >
+                    Criar uma nova assinatura
+                  </button>
+                </div>
               </div>
             )}
           </div>
         </div>
       </main>
 
-      <footer className="w-full border-t border-slate-200 mt-12 bg-white/50">
-        <div className="max-w-[1200px] mx-auto px-6 py-8 text-center">
-          <p className="text-slate-500 font-bold text-[10px] uppercase tracking-[0.3em] font-['Titillium_Web',sans-serif]">
-            &copy; 2026 Prime Control — Marketing
-          </p>
-        </div>
+      <footer className="max-w-[1400px] mx-auto px-16 py-12 text-center">
+        <p className="text-slate-600 font-bold text-[10px] uppercase tracking-[0.3em] font-['Titillium_Web',sans-serif]">
+          &copy; 2026 Prime Control — Marketing
+        </p>
       </footer>
       <Chatbot />
-
-      {/* Tutorial Modal */}
-      {showTutorialModal && (
-        <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-[10000] flex items-center justify-center p-4 lg:p-6 font-['Poppins',sans-serif] animate-in fade-in duration-300">
-          <div className="bg-white rounded-3xl shadow-2xl w-full max-w-2xl max-h-[95vh] overflow-y-auto custom-scrollbar relative">
-            <button 
-              onClick={() => setShowTutorialModal(false)} 
-              className="absolute top-4 right-4 sm:top-5 sm:right-5 p-2 bg-slate-50 hover:bg-slate-100 rounded-full text-slate-400 hover:text-slate-600 transition-colors z-10"
-            >
-              <XIcon size={20} />
-            </button>
-            
-            <div className="p-6 sm:p-8">
-               <h3 className="text-xl sm:text-2xl font-bold text-[#002753] font-['Titillium_Web',sans-serif] mb-5 pr-8 tracking-tight leading-tight">
-                 Como configurar sua assinatura
-               </h3>
-               
-               <div className="bg-slate-900 rounded-2xl overflow-hidden shadow-md border border-slate-200 mb-6 aspect-video relative w-full">
-                 <iframe 
-                   width="100%" 
-                   height="100%" 
-                   src="https://www.youtube.com/embed/XCpDXNuEbos?autoplay=1" 
-                   title="Tutorial Prime Control" 
-                   frameBorder="0" 
-                   allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
-                   allowFullScreen
-                   className="absolute inset-0"
-                 />
-               </div>
-
-               <div className="flex justify-center">
-                 <a 
-                   href="#" 
-                   target="_blank" 
-                   rel="noopener noreferrer" 
-                   className="w-full sm:max-w-sm py-3.5 px-6 bg-[#002753] text-white rounded-xl font-bold hover:bg-[#003875] transition-all duration-300 flex items-center justify-center gap-3 active:scale-95 text-[13px] sm:text-[14px] shadow-sm hover:shadow-md"
-                 >
-                   <DownloadIcon size={18} />
-                   <span>Baixar manual (PPTX)</span>
-                 </a>
-               </div>
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   );
 }

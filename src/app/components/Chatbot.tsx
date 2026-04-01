@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { X as XIcon, MessageSquare as MessageSquareIcon, Send as SendIcon, ThumbsUp as ThumbsUpIcon, Heart as HeartIcon, Mail as MailIcon, ChevronRight as ChevronRightIcon } from 'lucide-react';
+import { X as XIcon, MessageSquare as MessageSquareIcon, Send as SendIcon, ThumbsUp as ThumbsUpIcon, Heart as HeartIcon, Mail as MailIcon, ChevronRight as ChevronRightIcon, ExternalLink as ExternalLinkIcon } from 'lucide-react';
 import orbiMascot from '../../assets/orbi_oficial.png';
 
 export default function Chatbot() {
@@ -10,8 +10,25 @@ export default function Chatbot() {
   const [showTooltip, setShowTooltip] = useState(false);
 
   useEffect(() => {
-    const timer = setTimeout(() => setShowTooltip(true), 2000);
-    return () => clearTimeout(timer);
+    let hideTimer: ReturnType<typeof setTimeout>;
+    let loopInterval: ReturnType<typeof setInterval>;
+
+    const triggerTooltip = () => {
+      setShowTooltip(true);
+      hideTimer = setTimeout(() => setShowTooltip(false), 30000); // Fica ativo por 30s
+    };
+
+    const initialTimer = setTimeout(() => {
+      triggerTooltip();
+      // Ciclo total de 150s (30s ativo + 120s escondido)
+      loopInterval = setInterval(triggerTooltip, 150000); 
+    }, 2000); // Espera 2s ao entrar na página
+
+    return () => {
+      clearTimeout(initialTimer);
+      clearTimeout(hideTimer);
+      clearInterval(loopInterval);
+    };
   }, []);
 
   const handleSendFeedback = (e: React.FormEvent) => {
@@ -101,8 +118,10 @@ export default function Chatbot() {
                   <ChevronRightIcon size={16} className="text-slate-300 group-hover:text-[#f47920] transition-transform group-hover:translate-x-1" />
                 </button>
 
-                <button 
-                  onClick={() => setView('feedback')}
+                <a 
+                  href="https://forms.office.com/r/C6CCdQRRHu"
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className="w-full p-4 bg-slate-50 hover:bg-emerald-50 border border-slate-100 hover:border-emerald-200 rounded-2xl flex items-center justify-between transition-all group"
                 >
                   <div className="flex items-center gap-3">
@@ -111,8 +130,8 @@ export default function Chatbot() {
                     </div>
                     <span className="text-[#002753] font-bold text-sm">Eu tenho um feedback</span>
                   </div>
-                  <ChevronRightIcon size={16} className="text-slate-300 group-hover:text-emerald-500 transition-transform group-hover:translate-x-1" />
-                </button>
+                  <ExternalLinkIcon size={16} className="text-slate-300 group-hover:text-emerald-500 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
+                </a>
               </div>
             )}
 
