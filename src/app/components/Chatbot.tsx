@@ -17,11 +17,10 @@ type FeedbackCategory = {
 };
 
 const FEEDBACK_CATEGORIES: FeedbackCategory[] = [
-  { id: 'elogio',     label: 'Elogio',     emoji: '⭐', color: 'bg-yellow-50',  hoverColor: 'hover:bg-yellow-100', borderColor: 'hover:border-yellow-300 border-yellow-100', textColor: 'text-yellow-600' },
-  { id: 'feedback',   label: 'Feedback',   emoji: '💬', color: 'bg-blue-50',    hoverColor: 'hover:bg-blue-100',   borderColor: 'hover:border-blue-300 border-blue-100',     textColor: 'text-blue-600'   },
-  { id: 'sugestao',   label: 'Sugestão',   emoji: '💡', color: 'bg-purple-50',  hoverColor: 'hover:bg-purple-100', borderColor: 'hover:border-purple-300 border-purple-100', textColor: 'text-purple-600' },
-  { id: 'reclamacao', label: 'Reclamação', emoji: '⚠️', color: 'bg-red-50',     hoverColor: 'hover:bg-red-100',    borderColor: 'hover:border-red-300 border-red-100',       textColor: 'text-red-500'    },
-  { id: 'informacao', label: 'Informação', emoji: 'ℹ️', color: 'bg-slate-50',   hoverColor: 'hover:bg-slate-100',  borderColor: 'hover:border-slate-300 border-slate-100',   textColor: 'text-slate-500'  },
+  { id: 'elogio',     label: 'Elogio',     emoji: '⭐', color: 'bg-slate-50', hoverColor: 'hover:bg-slate-100', borderColor: 'border-slate-100 hover:border-slate-300', textColor: 'text-[#002753]' },
+  { id: 'sugestao',   label: 'Sugestão',   emoji: '💡', color: 'bg-slate-50', hoverColor: 'hover:bg-slate-100', borderColor: 'border-slate-100 hover:border-slate-300', textColor: 'text-[#002753]' },
+  { id: 'reclamacao', label: 'Reclamação', emoji: '⚠️', color: 'bg-slate-50', hoverColor: 'hover:bg-slate-100', borderColor: 'border-slate-100 hover:border-slate-300', textColor: 'text-[#002753]' },
+  { id: 'informacao', label: 'Informação', emoji: 'ℹ️', color: 'bg-slate-50', hoverColor: 'hover:bg-slate-100', borderColor: 'border-slate-100 hover:border-slate-300', textColor: 'text-[#002753]' },
 ];
 
 export default function Chatbot({ onShowTutorial }: ChatbotProps) {
