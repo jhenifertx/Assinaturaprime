@@ -554,19 +554,6 @@ export default function App() {
                   </div>
                 </div>
 
-                <div className="bg-white rounded-2xl shadow-sm border border-slate-100 p-6 font-['Poppins',sans-serif]">
-                  <h3 className="text-[#002753] font-bold text-[15px] font-['Titillium_Web',sans-serif] mb-4 tracking-tight">Precisa de ajuda?</h3>
-                  <a 
-                    href="#" 
-                    target="_blank" 
-                    rel="noopener noreferrer" 
-                    className="w-full py-2.5 px-6 border border-[#002753] text-[#002753] rounded-xl font-bold hover:bg-[#002753] hover:text-white transition-all duration-300 flex items-center justify-center gap-3 active:scale-95 text-[13px] group shadow-sm hover:shadow-md"
-                  >
-                    <DownloadIcon size={16} className="group-hover:-translate-y-0.5 transition-transform duration-300" />
-                    <span>Baixar manual (PPTX)</span>
-                  </a>
-                </div>
-
                 <div className="bg-white rounded-2xl border border-dashed border-slate-300 p-10 flex flex-col items-center justify-center text-center transition-colors min-h-[300px]">
                   <div className="bg-slate-100 p-5 rounded-full mb-4 text-slate-400">
                     <MailIcon size={28} />
