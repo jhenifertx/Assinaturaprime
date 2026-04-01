@@ -163,7 +163,7 @@ export default function AppV2() {
       </td>
 
       <td align="left" valign="middle" style="padding-left:20px; vertical-align:middle; text-align:left;">
-        <div style="font-size:18px; font-weight:bold; color:#002753; margin:0; line-height: 1.2;">
+        <div style="font-size:18px; font-weight:bold; color:#002753; margin:0; line-height: 1.2; text-transform: uppercase;">
           ${formData.nome}
         </div>
 
