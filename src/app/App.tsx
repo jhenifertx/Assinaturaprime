@@ -152,8 +152,6 @@ export default function App() {
 
     return `
 <div style="font-family: 'Titillium Web', Tahoma, Arial, sans-serif; max-width: 650px; color: #002753;">
-  <p style="font-size:13px; margin: 0 0 15px 0;">Atenciosamente,</p>
-
   <table width="600" border="0" cellpadding="0" cellspacing="0" style="width:100%; max-width:600px; border-collapse: collapse;">
     <tr>
       <td width="160" align="center" valign="middle" style="width:160px; text-align:center; padding-right:15px; vertical-align:middle;">
