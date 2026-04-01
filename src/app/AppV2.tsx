@@ -167,7 +167,7 @@ export default function AppV2() {
           ${formData.nome}
         </div>
 
-        <div style="font-size:14px; color:#F47920; margin:4px 0 10px 0; line-height: 1.2;">
+        <div style="font-size:14px; font-weight:700; color:#F47920; margin:4px 0 10px 0; line-height: 1.2;">
           ${formData.cargo}
         </div>
 
