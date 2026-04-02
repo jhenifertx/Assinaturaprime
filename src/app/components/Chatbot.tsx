@@ -175,8 +175,7 @@ export default function Chatbot({ onShowTutorial }: ChatbotProps) {
                   <div className="w-14 h-14 bg-emerald-100 rounded-full flex items-center justify-center mx-auto text-emerald-500 mb-3">
                     <ThumbsUpIcon size={26} />
                   </div>
-                  <h4 className="text-[#002753] font-bold text-base font-['Titillium_Web',sans-serif]">Que tipo de feedback é?</h4>
-                  <p className="text-slate-400 text-xs mt-1">Selecione uma categoria para continuar.</p>
+                  <p className="text-[#002753] font-bold text-sm">Selecione uma categoria para continuar.</p>
                 </div>
 
                 <div className="space-y-2">
