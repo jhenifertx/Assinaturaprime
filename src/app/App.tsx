@@ -612,7 +612,7 @@ export default function App() {
 
                     <div className="pt-2 flex items-center justify-center gap-4 border-t border-slate-100">
                       <a 
-                        href="https://outlook.office.com/mail/options/mail/layout/EmailSignature"
+                        href="https://outlook.office.com/mail/options/accounts-category/signatures-subcategory"
                         target="_blank"
                         rel="noopener noreferrer"
                         className="flex items-center gap-2 font-bold text-[#002753] text-[11px] sm:text-[12px] uppercase tracking-wider hover:opacity-80 hover:bg-blue-50 px-4 py-2 rounded-lg transition-all"
