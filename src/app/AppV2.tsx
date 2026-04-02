@@ -571,44 +571,26 @@ export default function AppV2() {
                       <span>{copied ? 'Conteúdo copiado!' : 'Copiar Assinatura'}</span>
                     </button>
                     
-                    <div className="pt-2 flex flex-col gap-3">
+                    <div className="pt-2 flex items-center justify-center gap-4 border-t border-slate-100">
                       <a 
                         href="https://outlook.office.com/mail/options/mail/layout/EmailSignature"
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="w-full bg-[#F47920] text-white rounded-xl py-4 flex items-center justify-center gap-3 font-bold text-sm uppercase tracking-widest hover:bg-[#d25c0e] transition-all shadow-lg shadow-orange-500/20 active:scale-95 group"
+                        className="flex items-center gap-2 font-bold text-[#002753] text-[11px] sm:text-[12px] uppercase tracking-wider hover:opacity-80 hover:bg-blue-50 px-4 py-2 rounded-lg transition-all"
                       >
-                        <ExternalLinkIcon size={18} />
+                        <ExternalLinkIcon size={16} strokeWidth={2.5} />
                         Configurar no Outlook
                       </a>
 
-                      <div className="flex items-center justify-center gap-4">
-                        <button 
-                          onClick={() => setShowTutorialModal(true)}
-                          className="flex items-center gap-2 font-bold text-[#002753] text-[11px] sm:text-[12px] uppercase tracking-wider hover:opacity-80 hover:bg-blue-50 px-4 py-2 rounded-lg transition-all"
-                        >
-                          <PlayCircleIcon size={16} strokeWidth={2.5} />
-                          Ver Tutorial
-                        </button>
+                      <div className="w-px h-6 bg-slate-200"></div>
 
-                        <div className="w-px h-4 bg-slate-200"></div>
-
-                        <button 
-                          onClick={() => {
-                            setFormData({
-                              nome: '', email: '', cargo: '',
-                              celularDDD: '', celularNumero: '',
-                              telefoneDDD: '', telefoneNumero: ''
-                            });
-                            setErrors({});
-                            setCurrentStep(1);
-                          }}
-                          className="flex items-center gap-2 font-bold text-[#002753] text-[11px] sm:text-[12px] uppercase tracking-wider hover:opacity-80 hover:bg-blue-50 px-4 py-2 rounded-lg transition-all"
-                        >
-                          <RotateCcwIcon size={14} strokeWidth={2.5} />
-                          Nova Assinatura
-                        </button>
-                      </div>
+                      <button 
+                        onClick={() => setShowTutorialModal(true)}
+                        className="flex items-center gap-2 font-bold text-[#002753] text-[11px] sm:text-[12px] uppercase tracking-wider hover:opacity-80 hover:bg-blue-50 px-4 py-2 rounded-lg transition-all"
+                      >
+                        <PlayCircleIcon size={16} strokeWidth={2.5} />
+                        Ver Tutorial
+                      </button>
                     </div>
 
                     <div className="pt-6 border-t border-slate-100 flex flex-col items-center">
