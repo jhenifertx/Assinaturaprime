@@ -685,8 +685,8 @@ export default function AppV2() {
                    rel="noopener noreferrer" 
                    className="w-full sm:max-w-sm py-3.5 px-6 bg-[#002753] text-white rounded-xl font-bold hover:bg-[#003875] transition-all duration-300 flex items-center justify-center gap-3 active:scale-95 text-[13px] sm:text-[14px] shadow-sm hover:shadow-md"
                  >
-                   <DownloadIcon size={18} />
-                   <span>Baixar manual (PPTX)</span>
+                   <ExternalLinkIcon size={18} />
+                   <span>Acessar manual de uso</span>
                  </a>
                </div>
             </div>
