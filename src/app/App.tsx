@@ -125,8 +125,8 @@ export default function App() {
       setTimeout(() => {
         setIsGenerating(false);
         try {
-          const audio = new Audio('https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3');
-          audio.volume = 0.5;
+          const audio = new Audio('https://assets.mixkit.co/active_storage/sfx/2571/2571-preview.mp3');
+          audio.volume = 0.2;
           audio.play().catch(e => console.log('Audio error:', e));
         } catch (err) {
           // ignore
