@@ -1,5 +1,5 @@
 import { useState, useCallback, useEffect } from 'react';
-import { LucideIcon, Check as CheckIcon, Copy as CopyIcon, ChevronDown as ChevronDownIcon, ChevronUp as ChevronUpIcon, Phone as PhoneIcon, Mail as MailIcon, Play as PlayIcon, Download as DownloadIcon, CheckCircle2 as CheckCircle2Icon, AlertCircle as AlertCircleIcon, Loader2 as Loader2Icon, RotateCcw as RotateCcwIcon, PlayCircle as PlayCircleIcon, X as XIcon, Code as CodeIcon } from 'lucide-react';
+import { LucideIcon, Check as CheckIcon, Copy as CopyIcon, ChevronDown as ChevronDownIcon, ChevronUp as ChevronUpIcon, Phone as PhoneIcon, Mail as MailIcon, Play as PlayIcon, Download as DownloadIcon, CheckCircle2 as CheckCircle2Icon, AlertCircle as AlertCircleIcon, Loader2 as Loader2Icon, RotateCcw as RotateCcwIcon, PlayCircle as PlayCircleIcon, X as XIcon, Code as CodeIcon, ExternalLink as ExternalLinkIcon } from 'lucide-react';
 import imgPrimeControl from "figma:asset/a0d2e91fe30a3ed67d7934c34a6512e942d5c35b.png";
 import Chatbot from './components/Chatbot.tsx';
 
@@ -571,32 +571,44 @@ export default function AppV2() {
                       <span>{copied ? 'Conteúdo copiado!' : 'Copiar Assinatura'}</span>
                     </button>
                     
-                    <div className="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-6 w-full pt-2">
-                      <button 
-                        onClick={() => {
-                          setFormData({
-                            nome: '', email: '', cargo: '',
-                            celularDDD: '', celularNumero: '',
-                            telefoneDDD: '', telefoneNumero: ''
-                          });
-                          setErrors({});
-                          setCurrentStep(1);
-                        }}
-                        className="flex items-center gap-2 font-bold text-[#002753] text-[11px] sm:text-[12px] uppercase tracking-wider hover:opacity-80 hover:bg-blue-50 px-4 py-2 rounded-lg transition-all"
+                    <div className="pt-2 flex flex-col gap-3">
+                      <a 
+                        href="https://outlook.office.com/mail/options/mail/layout/EmailSignature"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="w-full bg-[#F47920] text-white rounded-xl py-4 flex items-center justify-center gap-3 font-bold text-sm uppercase tracking-widest hover:bg-[#d25c0e] transition-all shadow-lg shadow-orange-500/20 active:scale-95 group"
                       >
-                        <RotateCcwIcon size={14} strokeWidth={2.5} />
-                        Criar uma nova assinatura
-                      </button>
+                        <ExternalLinkIcon size={18} />
+                        Configurar no Outlook
+                      </a>
 
-                      <div className="hidden sm:block w-px h-6 bg-slate-200"></div>
+                      <div className="flex items-center justify-center gap-4">
+                        <button 
+                          onClick={() => setShowTutorialModal(true)}
+                          className="flex items-center gap-2 font-bold text-[#002753] text-[11px] sm:text-[12px] uppercase tracking-wider hover:opacity-80 hover:bg-blue-50 px-4 py-2 rounded-lg transition-all"
+                        >
+                          <PlayCircleIcon size={16} strokeWidth={2.5} />
+                          Ver Tutorial
+                        </button>
 
-                      <button 
-                        onClick={() => setShowTutorialModal(true)}
-                        className="flex items-center gap-2 font-bold text-[#002753] text-[11px] sm:text-[12px] uppercase tracking-wider hover:opacity-80 hover:bg-blue-50 px-4 py-2 rounded-lg transition-all"
-                      >
-                        <PlayCircleIcon size={16} strokeWidth={2.5} />
-                        Como configurar
-                      </button>
+                        <div className="w-px h-4 bg-slate-200"></div>
+
+                        <button 
+                          onClick={() => {
+                            setFormData({
+                              nome: '', email: '', cargo: '',
+                              celularDDD: '', celularNumero: '',
+                              telefoneDDD: '', telefoneNumero: ''
+                            });
+                            setErrors({});
+                            setCurrentStep(1);
+                          }}
+                          className="flex items-center gap-2 font-bold text-[#002753] text-[11px] sm:text-[12px] uppercase tracking-wider hover:opacity-80 hover:bg-blue-50 px-4 py-2 rounded-lg transition-all"
+                        >
+                          <RotateCcwIcon size={14} strokeWidth={2.5} />
+                          Nova Assinatura
+                        </button>
+                      </div>
                     </div>
 
                     <div className="pt-6 border-t border-slate-100 flex flex-col items-center">
