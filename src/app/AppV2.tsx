@@ -1,6 +1,7 @@
 import { useState, useCallback, useEffect } from 'react';
 import { LucideIcon, Check as CheckIcon, Copy as CopyIcon, ChevronDown as ChevronDownIcon, ChevronUp as ChevronUpIcon, Phone as PhoneIcon, Mail as MailIcon, Play as PlayIcon, Download as DownloadIcon, CheckCircle2 as CheckCircle2Icon, AlertCircle as AlertCircleIcon, Loader2 as Loader2Icon, RotateCcw as RotateCcwIcon, PlayCircle as PlayCircleIcon, X as XIcon, Code as CodeIcon, ExternalLink as ExternalLinkIcon } from 'lucide-react';
 import imgPrimeControl from "figma:asset/a0d2e91fe30a3ed67d7934c34a6512e942d5c35b.png";
+import tutorialCover from '../assets/tutorial-cover.jpg';
 import Chatbot from './components/Chatbot.tsx';
 
 interface FormData {
@@ -673,7 +674,7 @@ export default function AppV2() {
                      className="relative w-full h-full cursor-pointer overflow-hidden"
                    >
                      <img 
-                       src="/tutorial-cover.jpg" 
+                       src={tutorialCover} 
                        alt="Tutorial Cover" 
                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
                      />
