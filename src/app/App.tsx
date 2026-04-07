@@ -42,6 +42,7 @@ export default function App() {
   const [showMoreInfo, setShowMoreInfo] = useState(false);
   const [showVideo, setShowVideo] = useState(false);
   const [showTutorialModal, setShowTutorialModal] = useState(false);
+  const [modalVideoPlaying, setModalVideoPlaying] = useState(false);
 
   const formatPhone = (value: string) => {
     const numbers = value.replace(/\D/g, '');
@@ -539,7 +540,7 @@ export default function App() {
                         className="relative rounded-2xl overflow-hidden aspect-video cursor-pointer hover:shadow-2xl transition-all duration-700 group ring-4 ring-slate-50"
                       >
                         <img 
-                          src="https://img.youtube.com/vi/XCpDXNuEbos/maxresdefault.jpg" 
+                          src="/tutorial-cover.jpg" 
                           alt="Tutorial" 
                           className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-1000"
                         />
@@ -689,7 +690,7 @@ export default function App() {
         <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-[10000] flex items-center justify-center p-4 lg:p-6 font-['Poppins',sans-serif] animate-in fade-in duration-300">
           <div className="bg-white rounded-3xl shadow-2xl w-full max-w-2xl max-h-[95vh] overflow-y-auto custom-scrollbar relative">
             <button 
-              onClick={() => setShowTutorialModal(false)} 
+              onClick={() => { setShowTutorialModal(false); setModalVideoPlaying(false); }} 
               className="absolute top-4 right-4 sm:top-5 sm:right-5 p-2 bg-slate-50 hover:bg-slate-100 rounded-full text-slate-400 hover:text-slate-600 transition-colors z-10"
             >
               <XIcon size={20} />
@@ -700,17 +701,35 @@ export default function App() {
                  Como configurar sua assinatura
                </h3>
                
-               <div className="bg-slate-900 rounded-2xl overflow-hidden shadow-md border border-slate-200 mb-6 aspect-video relative w-full">
-                 <iframe 
-                   width="100%" 
-                   height="100%" 
-                   src="https://www.youtube.com/embed/XCpDXNuEbos?autoplay=1" 
-                   title="Tutorial Prime Control" 
-                   frameBorder="0" 
-                   allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
-                   allowFullScreen
-                   className="absolute inset-0"
-                 />
+               <div className="bg-slate-900 rounded-2xl overflow-hidden shadow-md border border-slate-200 mb-6 aspect-video relative w-full group">
+                 {!modalVideoPlaying ? (
+                   <div 
+                     onClick={() => setModalVideoPlaying(true)}
+                     className="relative w-full h-full cursor-pointer overflow-hidden"
+                   >
+                     <img 
+                       src="/tutorial-cover.jpg" 
+                       alt="Tutorial Cover" 
+                       className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+                     />
+                     <div className="absolute inset-0 bg-black/30 flex items-center justify-center group-hover:bg-black/10 transition-colors">
+                       <div className="bg-white w-14 h-14 rounded-full flex items-center justify-center shadow-xl transform transition-all group-hover:scale-110">
+                         <PlayIcon size={24} className="text-[#f47920] ml-1" fill="currentColor" />
+                       </div>
+                     </div>
+                   </div>
+                 ) : (
+                   <iframe 
+                     width="100%" 
+                     height="100%" 
+                     src="https://www.youtube.com/embed/XCpDXNuEbos?autoplay=1" 
+                     title="Tutorial Prime Control" 
+                     frameBorder="0" 
+                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+                     allowFullScreen
+                     className="absolute inset-0"
+                   />
+                 )}
                </div>
 
                <div className="flex justify-center">
