@@ -556,7 +556,7 @@ export default function App() {
                         <iframe 
                           width="100%" 
                           height="100%" 
-                          src="https://www.youtube.com/embed/XCpDXNuEbos?autoplay=1" 
+                          src="https://www.youtube.com/embed/zzn572Dcgzg?autoplay=1" 
                           title="Tutorial Prime Control" 
                           frameBorder="0" 
                           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
@@ -723,7 +723,7 @@ export default function App() {
                    <iframe 
                      width="100%" 
                      height="100%" 
-                     src="https://www.youtube.com/embed/XCpDXNuEbos?autoplay=1" 
+                     src="https://www.youtube.com/embed/zzn572Dcgzg?autoplay=1" 
                      title="Tutorial Prime Control" 
                      frameBorder="0" 
                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
