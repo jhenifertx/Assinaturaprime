@@ -688,7 +688,7 @@ export default function AppV2() {
                    <iframe 
                      width="100%" 
                      height="100%" 
-                     src="https://www.youtube.com/embed/zzn572Dcgzg?autoplay=1" 
+                     src="https://www.youtube.com/embed/zzn572Dcgzg?autoplay=1&modestbranding=1&rel=0&iv_load_policy=3" 
                      title="Tutorial Prime Control" 
                      frameBorder="0" 
                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
