@@ -1,5 +1,5 @@
 import { useState, useCallback, useEffect } from 'react';
-import { LucideIcon, Check as CheckIcon, Copy as CopyIcon, ChevronDown as ChevronDownIcon, ChevronUp as ChevronUpIcon, Phone as PhoneIcon, Mail as MailIcon, Play as PlayIcon, Download as DownloadIcon, CheckCircle2 as CheckCircle2Icon, AlertCircle as AlertCircleIcon, Loader2 as Loader2Icon, RotateCcw as RotateCcwIcon, PlayCircle as PlayCircleIcon, X as XIcon, ExternalLink as ExternalLinkIcon } from 'lucide-react';
+import { LucideIcon, Check as CheckIcon, Copy as CopyIcon, ChevronDown as ChevronDownIcon, ChevronUp as ChevronUpIcon, Phone as PhoneIcon, Mail as MailIcon, Play as PlayIcon, Download as DownloadIcon, CheckCircle2 as CheckCircle2Icon, AlertCircle as AlertCircleIcon, Loader2 as Loader2Icon, RotateCcw as RotateCcwIcon, PlayCircle as PlayCircleIcon, X as XIcon, ExternalLink as ExternalLinkIcon, ArrowDown as ArrowDownIcon } from 'lucide-react';
 import imgPrimeControl from "figma:asset/a0d2e91fe30a3ed67d7934c34a6512e942d5c35b.png";
 import tutorialCover from '../assets/tutorial-cover-final.jpg';
 import Chatbot from './components/Chatbot.tsx';
@@ -327,7 +327,7 @@ export default function App() {
 
       <main className="max-w-[1200px] mx-auto px-4 sm:px-8 py-6 lg:py-8">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 relative pb-10">
-          <div className="lg:col-span-5 order-2 lg:order-1 h-full">
+          <div className="lg:col-span-5 order-2 lg:order-1 h-full" id="signature-form">
             <div className="bg-white rounded-2xl shadow-xl border border-slate-100 border-l-[6px] border-l-orange-500 p-6 lg:p-8 lg:sticky lg:top-6 z-20 transition-all duration-500">
               <div className="mb-6 font-['Titillium_Web',sans-serif]">
                 <h2 className="text-xl sm:text-2xl text-[#002753] font-bold mb-2 tracking-tight leading-tight">
@@ -564,6 +564,17 @@ export default function App() {
                         />
                       </div>
                     )}
+                  </div>
+
+                  {/* Mobile Anchor Button */}
+                  <div className="lg:hidden px-6 pb-6 pt-2">
+                    <button
+                      onClick={() => document.getElementById('signature-form')?.scrollIntoView({ behavior: 'smooth' })}
+                      className="w-full py-4 bg-gradient-to-r from-[#f47920] to-[#fb923c] text-white rounded-xl font-bold uppercase tracking-widest text-[13px] shadow-lg shadow-orange-500/20 flex items-center justify-center gap-3 active:scale-95 transition-all group"
+                    >
+                      <span>Criar minha assinatura</span>
+                      <ArrowDownIcon size={18} className="animate-bounce group-hover:animate-none" />
+                    </button>
                   </div>
                 </div>
 
